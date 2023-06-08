@@ -2,28 +2,35 @@ from PIL import Image
 import os.path
 
 
-def decipher(img):
+def text_extract(image):
     """
-    This function takes an image and deciphers a hidden message within it.
+    Extracts a secret message hidden in the image.
 
-    Parameters:
-    image (PIL.Image.Image): An image object containing a hidden message.
+    Params:
+        img (PIL.Image.Image): The image object to be extracted.
 
     Returns:
-    str: The deciphered message string.
+        str: The message.
     """
-    message = ""
-    pixel = img.load()
-    for x in range(img.size[0]):
-        for y in range(img.size[1]):
-            if pixel[x, y] == 1:
-                message += chr(y)
+
+    pixels = image.load()
+    message = ''.join(chr(y) for x in range(image.width) for y in range(image.height) if pixels[x, y] == 1)
 
     return message
 
 
-if os.path.exists('resources/code.png'):
-    with Image.open('resources/code.png') as image:
-        print(decipher(image))
-else:
-    print("Image file not found.")
+def main():
+    """
+    Main function that loads an image and extracts the hidden message.
+
+    Prints the extracted message or an error message if the image file is not found.
+    """
+    if os.path.exists('resources/code.png'):
+        with Image.open('resources/code.png') as image:
+            print(text_extract(image))
+    else:
+        print("Image file not found.")
+
+
+if __name__ == '__main__':
+    main()
